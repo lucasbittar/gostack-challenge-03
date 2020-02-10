@@ -3,12 +3,12 @@
 </h1>
 
 <h3 align="center">
-  GoStack Challenge 02: FastFeet - Inital Development
+  GoStack Challenge 03: FastFeet - Back-end Wrap up
 </h3>
 
 ### Challenge
 
-Create the first step for fake logistics company app called FastFeet with the following goals:
+Wrap up the back-end for a fake logistics company app called FastFeet with the following goals:
 
 - User authentication using JWT
 - Create a single user with admin capabilities to add/edit recipients
