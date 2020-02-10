@@ -1,6 +1,7 @@
 import Sequelize from 'sequelize';
 import databaseConfig from '../config/database';
 
+import Deliveryman from '../app/models/Deliveryman';
 import File from '../app/models/File';
 import Recipient from '../app/models/Recipient';
 import User from '../app/models/User';
@@ -8,7 +9,7 @@ import User from '../app/models/User';
 /*
  * Always make sure to populate models array when another table is created
  */
-const models = [File, Recipient, User];
+const models = [Deliveryman, File, Recipient, User];
 
 class Database {
   constructor() {
@@ -25,7 +26,11 @@ class Database {
     connect()
       .then(() => {
         console.log(`${databaseConfig.database} connected!`);
-        models.map(model => model.init(this.connection));
+        models
+          .map(model => model.init(this.connection))
+          .map(
+            model => model.associate && model.associate(this.connection.models)
+          );
       })
       .catch(e => {
         console.log('Something went wrong: ', e.message);
