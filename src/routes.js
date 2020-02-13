@@ -36,6 +36,10 @@ routes.get(
   '/deliveryman/:deliveryman_id/orders',
   DeliverymanOrdersController.index
 );
+routes.put(
+  '/deliveryman/:deliveryman_id/orders/:order_id',
+  DeliverymanOrdersController.update
+);
 
 routes.post('/orders', OrderController.store);
 routes.put('/orders/:id', OrderController.update);

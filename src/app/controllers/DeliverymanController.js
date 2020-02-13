@@ -1,4 +1,5 @@
 import * as Yup from 'yup';
+
 import Deliveryman from '../models/Deliveryman';
 
 class DeliverymanController {
