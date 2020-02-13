@@ -14,6 +14,10 @@ Wrap up the back-end for a fake logistics company app called FastFeet with the f
 - Create a single user with admin capabilities to add/edit recipients
 - Recipients management
 
+### To do ###
+- Setup emails on creating and canceling orders
+- Update README with new functionalities
+
 ### Instructions ###
 ```
 yarn install && yarn dev
@@ -21,7 +25,7 @@ yarn install && yarn dev
 Once yarn is running, all of the requests should point to: http://localhost:33333/.
 
 ### Description ###
-First step for the development of a fake logistics company app called FastFeet.
+Final steps for the development of a fake logistics company app called FastFeet.
 
 Tools and technologies used on this project:
 
@@ -31,6 +35,8 @@ Tools and technologies used on this project:
 - Sucrase + Nodemon
 - Sequelize
 - PostgreSQL
+- Multer
+- Date-fns
 
 ### Routes ###
 #### Sessions ####
