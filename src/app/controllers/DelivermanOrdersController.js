@@ -4,7 +4,7 @@ import Deliveryman from '../models/Deliveryman';
 import Order from '../models/Order';
 
 class DeliverymanOrdersController {
-  async index(req, res) {
+  async show(req, res) {
     const { deliveryman_id } = req.params;
 
     const deliverymanExists = await Deliveryman.findOne({
