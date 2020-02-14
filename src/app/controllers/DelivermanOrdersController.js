@@ -39,32 +39,6 @@ class DeliverymanOrdersController {
       return res.status(400).json({ error: 'Validation failed' });
     }
 
-    /*
-    let missingSignatureError = '';
-    const handleSignatureVerification = (end_date, field) => {
-      if (end_date) {
-        missingSignatureError = 'Signature is required on closing orders';
-        return field.required();
-      }
-      return field();
-    };
-
-    const schema = Yup.object().shape({
-      start_date: Yup.date(),
-      end_date: Yup.date(),
-      signature_id: Yup.number().when('end_date', handleSignatureVerification),
-    });
-
-    if (!(await schema.isValid(req.body))) {
-      return res.status(400).json({
-        error:
-          missingSignatureError !== ''
-            ? missingSignatureError
-            : 'Validation failed',
-      });
-    }
-    */
-
     const { deliveryman_id, order_id } = req.params;
     const { start_date, end_date, signature_id } = req.body;
 
