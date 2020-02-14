@@ -1,9 +1,12 @@
 import * as Yup from 'yup';
+import { format, parseISO } from 'date-fns';
 
 import Deliveryman from '../models/Deliveryman';
 import File from '../models/File';
 import Order from '../models/Order';
 import Recipient from '../models/Recipient';
+
+import Mail from '../../lib/Mail';
 
 class OrderController {
   async index(req, res) {
@@ -63,6 +66,24 @@ class OrderController {
     }
 
     const order = await Order.create(req.body);
+
+    await Mail.sendMail({
+      to: `${deliveryman.name} <${deliveryman.email}>`,
+      subject: `There's a new order waiting for you!`,
+      template: 'newOrder',
+      context: {
+        created_at: format(order.createdAt, "MMMM do 'at' hh:mma"),
+        deliveryman: deliveryman.name,
+        product: order.product,
+        recipient_name: recipient.name,
+        recipient_address: `${recipient.address}, ${recipient.number}${
+          recipient.address_2 ? ` – ${recipient.address_2}` : null
+        }`,
+        recipient_city: recipient.city,
+        recipient_state: recipient.state,
+        recipient_zip_code: recipient.zip_code,
+      },
+    });
 
     return res.json(order);
   }

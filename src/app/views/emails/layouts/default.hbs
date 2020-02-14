@@ -1,0 +1,51 @@
+<style type="text/css">
+  header {
+    text-align: center;
+    padding: 3em;
+    margin-bottom: 2em;
+    margin-bottom: 1px solid #7158c1;
+  }
+  header img {
+    max-width: 320px;
+  }
+  footer {
+    text-align: center;
+    padding: 1em;
+    background: #7159c1;
+    color: #fff;
+  }
+  h4 {
+    padding: 1em 1em;
+    margin-left: -1em;
+    background: #eee;
+    text-transform: uppercase;
+    font-size: 0.95em;
+  }
+  .info {
+    padding: 1em;
+  }
+  .info div {
+    margin-bottom: 0.5em;
+    font-size: 1.8em;
+    color: #7158c1;
+  }
+  .info strong {
+    text-transform: uppercase;
+    font-size: 0.95em;
+    color: #6f6f6f;
+  }
+  hr {
+    height: 1px;
+    width: 100%;
+    border: none;
+    border-bottom: 1px solid #eee;
+  }
+</style>
+
+<div
+  style="font-family: Arial, Helvetica, sans-serif; font-size: 14px; line-height: 1.6; color: #222; max-width: 600px; margin: 0 auto;"
+>
+  {{> header }}
+  {{{ body }}}
+  {{> footer }}
+</div>

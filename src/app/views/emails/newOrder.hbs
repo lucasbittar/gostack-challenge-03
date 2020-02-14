@@ -1,0 +1,25 @@
+<h1>
+  <strong>Hello, {{ deliveryman }}!</strong>
+</h1>
+<h3>
+  <p>You have a new order waiting for you to pickup!</p>
+</h3>
+
+<p>Here's all the details you need:</p>
+<p>
+  <div class="info">
+    <h4>Order</h4>
+    <strong>Created at:</strong><div>{{ created_at }}</div>
+    <h4>Product Info</h4>
+    <strong>Name:</strong><div>{{ product }}</div>
+    <h4>Recipient Info</h4>
+    <strong>Name: </strong><div>{{ recipient_name }}</div>
+    <strong>Address: </strong><div>{{ recipient_address }}</div>
+    <strong>City: </strong><div>{{ recipient_city }}</div>
+    <strong>State: </strong><div>{{ recipient_state }}</div>
+    <strong>ZIP Code: </strong><div>{{ recipient_zip_code }}</div>
+  </div>
+</p>
+
+<hr />
+<p>Let us know when you pick this order up!</p>
