@@ -13,6 +13,11 @@ Wrap up the back-end for a fake logistics company app called FastFeet with the f
 - User authentication using JWT
 - Create a single user with admin capabilities to add/edit recipients
 - Recipients management
+- Orders management
+- Issues management
+- Deliverymen management
+- Files management
+- Setup emails on creating and canceling orders
 
 ### To do ###
 - Setup emails on creating and canceling orders
