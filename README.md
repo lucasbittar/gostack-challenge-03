@@ -44,7 +44,7 @@ Tools and technologies used on this project:
 - Nodemailer
 - JWT Authentication
 
-### [Routes](https://github.com/lucasbittar/gostask-challenge-03/wiki/Routes) ###
+### [Check out the wiki for more information](https://github.com/lucasbittar/gostask-challenge-03/wiki) ###
 
 ### Tips ###
 I highly recommend using [Insomnia](https://insomnia.rest/) app to play around with the requests in a simple and straight-forward UI.
