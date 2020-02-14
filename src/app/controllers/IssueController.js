@@ -1,4 +1,5 @@
 import OrderIssue from '../models/OrderIssue';
+import Order from '../models/Order';
 
 class IssueController {
   async delete(req, res) {
@@ -9,10 +10,14 @@ class IssueController {
       return res.status(404).json({ error: 'Issue not found' });
     }
 
-    await issue.destroy();
+    const { order_id } = issue;
+
+    const order = await Order.findByPk(order_id);
+
+    await order.update({ canceled_at: new Date() });
 
     return res.json({
-      message: `Issue with ID ${id} was sucessfully removed`,
+      message: `Order with ID ${order_id} was successfully canceled`,
     });
   }
 }
