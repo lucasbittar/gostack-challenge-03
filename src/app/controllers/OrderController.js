@@ -1,5 +1,4 @@
 import * as Yup from 'yup';
-import { format, parseISO } from 'date-fns';
 
 import Deliveryman from '../models/Deliveryman';
 import File from '../models/File';
@@ -51,17 +50,15 @@ class OrderController {
       return res.status(400).json({ error: 'Validation failed' });
     }
 
-    const recipientExist = await Recipient.findByPk(req.body.recipient_id);
+    const recipient = await Recipient.findByPk(req.body.recipient_id);
 
-    if (!recipientExist) {
+    if (!recipient) {
       return res.status(401).json({ error: 'Recipient not found.' });
     }
 
-    const deliverymanExist = await Deliveryman.findByPk(
-      req.body.deliveryman_id
-    );
+    const deliveryman = await Deliveryman.findByPk(req.body.deliveryman_id);
 
-    if (!deliverymanExist) {
+    if (!deliveryman) {
       return res.status(401).json({ error: 'Deliveryman not found.' });
     }
 
@@ -74,11 +71,7 @@ class OrderController {
     const schema = Yup.object().shape({
       recipient_id: Yup.number().required(),
       deliveryman_id: Yup.number().required(),
-      signature_id: Yup.number(),
       product: Yup.string(),
-      canceled_at: Yup.string(),
-      start_date: Yup.string(),
-      end_date: Yup.string(),
     });
 
     if (!(await schema.isValid(req.body))) {
@@ -101,26 +94,14 @@ class OrderController {
 
     const { deliveryman_id, recipient_id, start_date } = req.body;
 
-    /*
-     * Pickups only between 8am and 6pm
-     */
-    const startDateTime = format(parseISO(start_date), 'H');
+    const recipient = await Recipient.findByPk(recipient_id);
+    const deliveryman = await Deliveryman.findByPk(deliveryman_id);
 
-    if (startDateTime > 18 || startDateTime < 8) {
-      return res
-        .status(401)
-        .json({ error: 'You can only pickup an order between 8am and 6pm' });
-    }
-
-    const recipientExist = await Recipient.findByPk(recipient_id);
-
-    if (!recipientExist) {
+    if (!recipient) {
       return res.status(401).json({ error: 'Recipient not found.' });
     }
 
-    const deliverymanExist = await Deliveryman.findByPk(deliveryman_id);
-
-    if (!deliverymanExist) {
+    if (!deliveryman) {
       return res.status(401).json({ error: 'Deliveryman not found.' });
     }
 
