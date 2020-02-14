@@ -41,6 +41,8 @@ Tools and technologies used on this project:
 - PostgreSQL
 - Multer
 - Date-fns
+- Nodemailer
+- JWT Authentication
 
 ### [Routes](https://github.com/lucasbittar/gostask-challenge-03/wiki/Routes) ###
 
