@@ -21,6 +21,8 @@ Wrap up the back-end for a fake logistics company app called FastFeet with the f
 
 ### To do ###
 - Update README with new functionalities
+- Integrate Sentry (not in challenge specs)
+- Integrate Redis for email queuing (not in challenge specs)
 
 ### Instructions ###
 ```
