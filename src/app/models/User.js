@@ -25,7 +25,6 @@ class User extends Model {
   }
 
   checkPassword(password) {
-    console.log('Checking password...');
     return bcrypt.compare(password, this.password_hash);
   }
 }

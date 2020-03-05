@@ -42,6 +42,18 @@ class OrderController {
     return res.json(orders);
   }
 
+  async show(req, res) {
+    const { id } = req.params;
+
+    const order = await Order.findByPk(id);
+
+    if (!order) {
+      return res.status(401).json({ error: 'Order not found.' });
+    }
+
+    return res.json(order);
+  }
+
   async store(req, res) {
     const schema = Yup.object().shape({
       recipient_id: Yup.number().required(),
