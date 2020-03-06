@@ -10,8 +10,13 @@ import Mail from '../../lib/Mail';
 
 class OrderController {
   async index(req, res) {
-    const orders = await Order.findAll({
+    const { page = 1 } = req.query;
+    const pageLimit = 10;
+
+    const orders = await Order.findAndCountAll({
       attributes: ['id', 'product', 'canceled_at', 'start_date', 'end_date'],
+      limit: pageLimit,
+      offset: (page - 1) * pageLimit,
       include: [
         {
           model: Recipient,
