@@ -26,8 +26,10 @@ routes.use(authMiddleware);
 routes.put('/users', UserController.update);
 
 routes.post('/recipients', RecipientController.store);
+routes.get('/recipients/:id', RecipientController.show);
 routes.put('/recipients/:id', RecipientController.update);
 routes.get('/recipients', RecipientController.index);
+routes.delete('/recipients/:id', RecipientController.delete);
 
 routes.post('/deliverymen', DeliverymanController.store);
 routes.put('/deliverymen/:id', DeliverymanController.update);
@@ -52,6 +54,7 @@ routes.delete('/orders/:id', OrderController.delete);
 
 routes.post('/order/:order_id/issues', OrderIssueController.store);
 routes.get('/order/:order_id/issues', OrderIssueController.show);
+routes.get('/issues', OrderIssueController.index);
 
 routes.delete('/issue/:id/cancel-order', IssueController.delete);
 

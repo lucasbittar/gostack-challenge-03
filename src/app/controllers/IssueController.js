@@ -40,6 +40,7 @@ class IssueController {
     const deliveryman = await Deliveryman.findByPk(issue.order.deliveryman_id);
 
     await issue.order.update({ canceled_at: new Date() });
+    await issue.update({ canceled_at: new Date() });
 
     await Mail.sendMail({
       to: `${deliveryman.name} <${deliveryman.email}>`,

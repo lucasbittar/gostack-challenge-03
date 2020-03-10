@@ -1,4 +1,5 @@
 import * as Yup from 'yup';
+import { Op } from 'sequelize';
 import Recipient from '../models/Recipient';
 
 class RecipientController {
@@ -81,7 +82,71 @@ class RecipientController {
    * Fetch all recipients from DB
    */
   async index(req, res) {
-    return res.json(await Recipient.findAndCountAll());
+    const { page = 1, search } = req.query;
+    const pageLimit = 10;
+
+    const recipientsParams = {
+      limit: pageLimit,
+      order: [['id', 'DESC']],
+      offset: (page - 1) * pageLimit,
+    };
+
+    if (search) {
+      const foundrecipientsByQuery = await Recipient.findAndCountAll({
+        ...recipientsParams,
+        where: {
+          name: {
+            [Op.iRegexp]: `(${search}+)`,
+          },
+        },
+      });
+      return res.json(foundrecipientsByQuery);
+    }
+
+    const recipients = await Recipient.findAndCountAll(recipientsParams);
+    return res.json(recipients);
+    // return res.json(await Recipient.findAndCountAll());
+  }
+
+  /*
+   * Fetch a specific recipient from DB
+   */
+  async show(req, res) {
+    const { id } = req.params;
+
+    const recipient = await Recipient.findByPk(id, {
+      attributes: [
+        'name',
+        'address',
+        'number',
+        'address_2',
+        'city',
+        'state',
+        'zip_code',
+      ],
+    });
+    if (!recipient) {
+      return res.status(401).json({ error: 'Recipient not found.' });
+    }
+
+    return res.json(recipient);
+  }
+
+  /*
+   * Delete a specific recipient from DB
+   */
+  async delete(req, res) {
+    const { id } = req.params;
+    const recipient = await Recipient.findByPk(id);
+
+    if (!recipient) {
+      return res.status(404).json({ error: 'Recipient not found' });
+    }
+    await recipient.destroy();
+
+    return res.json({
+      message: `Recipient with ID ${id} was sucessfully removed`,
+    });
   }
 }
 

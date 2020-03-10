@@ -4,7 +4,8 @@ class OrderIssue extends Model {
   static init(sequelize) {
     super.init(
       {
-        description: Sequelize.STRING,
+        full_description: Sequelize.STRING,
+        canceled_at: Sequelize.DATE,
       },
       {
         sequelize,
