@@ -1,4 +1,5 @@
 import * as Yup from 'yup';
+import { Op } from 'sequelize';
 import { format, parseISO } from 'date-fns';
 
 import Deliveryman from '../models/Deliveryman';
@@ -10,14 +11,20 @@ import Mail from '../../lib/Mail';
 
 class OrderController {
   async index(req, res) {
-    const { page = 1 } = req.query;
+    const { page = 1, search } = req.query;
     const pageLimit = 10;
 
-    const orders = await Order.findAndCountAll({
+    const ordersParams = {
       attributes: ['id', 'product', 'canceled_at', 'start_date', 'end_date'],
       limit: pageLimit,
+      order: [['id', 'DESC']],
       offset: (page - 1) * pageLimit,
       include: [
+        {
+          model: File,
+          as: 'signature',
+          attributes: ['id', 'path', 'url'],
+        },
         {
           model: Recipient,
           as: 'recipient',
@@ -26,6 +33,7 @@ class OrderController {
             'address',
             'number',
             'address_2',
+            'zip_code',
             'city',
             'state',
           ],
@@ -43,7 +51,51 @@ class OrderController {
           ],
         },
       ],
-    });
+    };
+
+    if (search) {
+      const foundOrdersByQuery = await Order.findAndCountAll({
+        ...ordersParams,
+        include: [
+          {
+            model: File,
+            as: 'signature',
+            attributes: ['id', 'path', 'url'],
+          },
+          {
+            model: Deliveryman,
+            as: 'deliveryman',
+            attributes: ['name', 'email'],
+            where: {
+              name: {
+                [Op.iRegexp]: `(${search}+)`,
+              },
+            },
+          },
+          {
+            model: Recipient,
+            as: 'recipient',
+            attributes: [
+              'name',
+              'address',
+              'number',
+              'address_2',
+              'zip_code',
+              'city',
+              'state',
+            ],
+            where: {
+              name: {
+                [Op.iRegexp]: `^[${search}]`,
+              },
+            },
+          },
+        ],
+      });
+      return res.json(foundOrdersByQuery);
+    }
+
+    const orders = await Order.findAndCountAll(ordersParams);
     return res.json(orders);
   }
 

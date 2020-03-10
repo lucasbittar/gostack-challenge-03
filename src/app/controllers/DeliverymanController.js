@@ -1,11 +1,69 @@
 import * as Yup from 'yup';
+import { Op } from 'sequelize';
 
 import Deliveryman from '../models/Deliveryman';
+import File from '../models/File';
 
 class DeliverymanController {
   async index(req, res) {
-    const deliverymen = await Deliveryman.findAll();
+    const { page = 1, search } = req.query;
+    const pageLimit = 10;
+
+    const deliverymenParams = {
+      limit: pageLimit,
+      order: [['id', 'DESC']],
+      offset: (page - 1) * pageLimit,
+      include: [
+        {
+          model: File,
+          as: 'avatar',
+          attributes: ['id', 'path', 'url'],
+        },
+      ],
+    };
+
+    if (search) {
+      const foundDeliverymenByQuery = await Deliveryman.findAndCountAll({
+        ...deliverymenParams,
+        where: {
+          name: {
+            [Op.iRegexp]: `(${search}+)`,
+          },
+        },
+        include: [
+          {
+            model: File,
+            as: 'avatar',
+            attributes: ['id', 'path', 'url'],
+          },
+        ],
+      });
+      return res.json(foundDeliverymenByQuery);
+    }
+
+    const deliverymen = await Deliveryman.findAndCountAll(deliverymenParams);
     return res.json(deliverymen);
+  }
+
+  async show(req, res) {
+    const { id } = req.params;
+
+    const deliveryman = await Deliveryman.findByPk(id, {
+      attributes: ['name', 'email'],
+      include: [
+        {
+          model: File,
+          as: 'avatar',
+          attributes: ['id', 'path', 'url'],
+        },
+      ],
+    });
+
+    if (!deliveryman) {
+      return res.status(401).json({ error: 'Deliveryman not found.' });
+    }
+
+    return res.json(deliveryman);
   }
 
   async store(req, res) {
@@ -14,7 +72,7 @@ class DeliverymanController {
       email: Yup.string()
         .email()
         .required(),
-      avatar_id: Yup.number().required(),
+      avatar_id: Yup.number(),
     });
 
     if (!(await schema.isValid(req.body))) {

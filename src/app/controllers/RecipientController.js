@@ -81,7 +81,7 @@ class RecipientController {
    * Fetch all recipients from DB
    */
   async index(req, res) {
-    return res.json(await Recipient.findAll());
+    return res.json(await Recipient.findAndCountAll());
   }
 }
 
