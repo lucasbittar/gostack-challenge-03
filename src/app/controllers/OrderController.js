@@ -56,41 +56,11 @@ class OrderController {
     if (search) {
       const foundOrdersByQuery = await Order.findAndCountAll({
         ...ordersParams,
-        include: [
-          {
-            model: File,
-            as: 'signature',
-            attributes: ['id', 'path', 'url'],
+        where: {
+          product: {
+            [Op.iRegexp]: `(${search}+)`,
           },
-          {
-            model: Deliveryman,
-            as: 'deliveryman',
-            attributes: ['name', 'email'],
-            where: {
-              name: {
-                [Op.iRegexp]: `(${search}+)`,
-              },
-            },
-          },
-          {
-            model: Recipient,
-            as: 'recipient',
-            attributes: [
-              'name',
-              'address',
-              'number',
-              'address_2',
-              'zip_code',
-              'city',
-              'state',
-            ],
-            where: {
-              name: {
-                [Op.iRegexp]: `^[${search}]`,
-              },
-            },
-          },
-        ],
+        },
       });
       return res.json(foundOrdersByQuery);
     }
