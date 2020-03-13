@@ -1,8 +1,10 @@
 import * as Yup from 'yup';
+import { Op } from 'sequelize';
 import { format, parseISO } from 'date-fns';
 
 import Deliveryman from '../models/Deliveryman';
 import Order from '../models/Order';
+import Recipient from '../models/Recipient';
 
 class DeliverymanOrdersController {
   async show(req, res) {
@@ -18,12 +20,55 @@ class DeliverymanOrdersController {
       return res.status(400).json({ error: 'Invalid deliveryman_id' });
     }
 
-    const orders = await Order.findAll({
+    const { page = 1, status } = req.query;
+    const pageLimit = 10;
+    const filter = {
       where: {
         deliveryman_id,
         canceled_at: null,
-        end_date: null,
       },
+    };
+
+    if (status === 'pending') {
+      filter.where = {
+        ...filter.where,
+        end_date: null,
+      };
+    }
+
+    if (status === 'delivered') {
+      filter.where = {
+        ...filter.where,
+        end_date: {
+          [Op.not]: null,
+        },
+      };
+    }
+
+    const ordersParams = {
+      limit: pageLimit,
+      order: [['start_date', 'ASC']],
+      offset: (page - 1) * pageLimit,
+      include: [
+        {
+          model: Recipient,
+          as: 'recipient',
+          attributes: [
+            'name',
+            'address',
+            'number',
+            'address_2',
+            'city',
+            'state',
+            'zip_code',
+          ],
+        },
+      ],
+    };
+
+    const orders = await Order.findAndCountAll({
+      ...ordersParams,
+      ...filter,
     });
     return res.json(orders);
   }

@@ -72,7 +72,23 @@ class OrderController {
   async show(req, res) {
     const { id } = req.params;
 
-    const order = await Order.findByPk(id);
+    const order = await Order.findByPk(id, {
+      include: [
+        {
+          model: Recipient,
+          as: 'recipient',
+          attributes: [
+            'name',
+            'address',
+            'number',
+            'address_2',
+            'city',
+            'state',
+            'zip_code',
+          ],
+        },
+      ],
+    });
 
     if (!order) {
       return res.status(401).json({ error: 'Order not found.' });
