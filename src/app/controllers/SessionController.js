@@ -52,13 +52,14 @@ class SessionController {
       });
     }
 
-    console.log('Mobile Seesion');
     const schema = Yup.object().shape({
       deliveryman_id: Yup.number().required(),
     });
 
     if (!(await schema.isValid(req.body))) {
-      return res.status(400).json({ error: 'Validation failed' });
+      return res.status(400).json({
+        error: 'Validation failed. Make sure you typed in your ID correctly.',
+      });
     }
 
     const { deliveryman_id } = req.body;
