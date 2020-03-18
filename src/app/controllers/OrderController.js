@@ -5,13 +5,14 @@ import { format, parseISO } from 'date-fns';
 import Deliveryman from '../models/Deliveryman';
 import File from '../models/File';
 import Order from '../models/Order';
+import OrderIssue from '../models/OrderIssue';
 import Recipient from '../models/Recipient';
 
 import Mail from '../../lib/Mail';
 
 class OrderController {
   async index(req, res) {
-    const { page = 1, q } = req.query;
+    const { page = 1, q, withIssues } = req.query;
     const pageLimit = 10;
 
     const ordersParams = {
@@ -20,6 +21,10 @@ class OrderController {
       order: [['id', 'DESC']],
       offset: (page - 1) * pageLimit,
       include: [
+        {
+          model: OrderIssue,
+          as: 'issues',
+        },
         {
           model: File,
           as: 'signature',
@@ -63,6 +68,54 @@ class OrderController {
         },
       });
       return res.json(foundOrdersByQuery);
+    }
+
+    if (withIssues) {
+      const ordersWithIssues = await Order.findAndCountAll({
+        ...ordersParams,
+        include: [
+          {
+            model: File,
+            as: 'signature',
+            attributes: ['id', 'path', 'url'],
+          },
+          {
+            model: Recipient,
+            as: 'recipient',
+            attributes: [
+              'name',
+              'address',
+              'number',
+              'address_2',
+              'zip_code',
+              'city',
+              'state',
+            ],
+          },
+          {
+            model: Deliveryman,
+            as: 'deliveryman',
+            attributes: ['name', 'email'],
+            include: [
+              {
+                model: File,
+                as: 'avatar',
+                attributes: ['id', 'path', 'url'],
+              },
+            ],
+          },
+          {
+            model: OrderIssue,
+            as: 'issues',
+            where: {
+              id: {
+                [Op.not]: null,
+              },
+            },
+          },
+        ],
+      });
+      return res.json(ordersWithIssues);
     }
 
     const orders = await Order.findAndCountAll(ordersParams);
