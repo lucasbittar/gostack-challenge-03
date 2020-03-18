@@ -11,7 +11,7 @@ import Mail from '../../lib/Mail';
 
 class OrderController {
   async index(req, res) {
-    const { page = 1, search } = req.query;
+    const { page = 1, q } = req.query;
     const pageLimit = 10;
 
     const ordersParams = {
@@ -53,12 +53,12 @@ class OrderController {
       ],
     };
 
-    if (search) {
+    if (q) {
       const foundOrdersByQuery = await Order.findAndCountAll({
         ...ordersParams,
         where: {
           product: {
-            [Op.iRegexp]: `(${search}+)`,
+            [Op.iRegexp]: `(${q}+)`,
           },
         },
       });

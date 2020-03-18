@@ -6,7 +6,7 @@ import File from '../models/File';
 
 class DeliverymanController {
   async index(req, res) {
-    const { page = 1, search } = req.query;
+    const { page = 1, q } = req.query;
     const pageLimit = 10;
 
     const deliverymenParams = {
@@ -22,12 +22,12 @@ class DeliverymanController {
       ],
     };
 
-    if (search) {
+    if (q) {
       const foundDeliverymenByQuery = await Deliveryman.findAndCountAll({
         ...deliverymenParams,
         where: {
           name: {
-            [Op.iRegexp]: `(${search}+)`,
+            [Op.iRegexp]: `(${q}+)`,
           },
         },
         include: [

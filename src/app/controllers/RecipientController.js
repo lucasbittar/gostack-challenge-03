@@ -82,7 +82,7 @@ class RecipientController {
    * Fetch all recipients from DB
    */
   async index(req, res) {
-    const { page = 1, search } = req.query;
+    const { page = 1, q } = req.query;
     const pageLimit = 10;
 
     const recipientsParams = {
@@ -91,12 +91,12 @@ class RecipientController {
       offset: (page - 1) * pageLimit,
     };
 
-    if (search) {
+    if (q) {
       const foundrecipientsByQuery = await Recipient.findAndCountAll({
         ...recipientsParams,
         where: {
           name: {
-            [Op.iRegexp]: `(${search}+)`,
+            [Op.iRegexp]: `(${q}+)`,
           },
         },
       });
