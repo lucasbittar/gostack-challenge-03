@@ -1,11 +1,10 @@
-import { format, parseISO } from 'date-fns';
-
 import Deliveryman from '../models/Deliveryman';
 import Order from '../models/Order';
 import OrderIssue from '../models/OrderIssue';
 import Recipient from '../models/Recipient';
 
-import Mail from '../../lib/Mail';
+import CanceledOrderMail from '../jobs/CanceledOrderMail';
+import Queue from '../../lib/Queue';
 
 class IssueController {
   async delete(req, res) {
@@ -42,16 +41,10 @@ class IssueController {
     await issue.order.update({ canceled_at: new Date() });
     await issue.update({ canceled_at: new Date() });
 
-    await Mail.sendMail({
-      to: `${deliveryman.name} <${deliveryman.email}>`,
-      subject: `An order has been canceled!`,
-      template: 'canceledOrder',
-      context: {
-        canceled_at: format(new Date(), "MMMM do 'at' h:mma"),
-        deliveryman: deliveryman.name,
-        product: issue.order.product,
-        recipient_name: recipient.name,
-      },
+    await Queue.add(CanceledOrderMail.key, {
+      recipient,
+      deliveryman,
+      issue,
     });
 
     return res.json({

@@ -1,6 +1,5 @@
 import * as Yup from 'yup';
 import { Op } from 'sequelize';
-import { format, parseISO } from 'date-fns';
 
 import Deliveryman from '../models/Deliveryman';
 import File from '../models/File';
@@ -8,7 +7,8 @@ import Order from '../models/Order';
 import OrderIssue from '../models/OrderIssue';
 import Recipient from '../models/Recipient';
 
-import Mail from '../../lib/Mail';
+import NewOrderMail from '../jobs/NewOrderMail';
+import Queue from '../../lib/Queue';
 
 class OrderController {
   async index(req, res) {
@@ -175,22 +175,10 @@ class OrderController {
 
     const order = await Order.create(req.body);
 
-    await Mail.sendMail({
-      to: `${deliveryman.name} <${deliveryman.email}>`,
-      subject: `There's a new order waiting for you!`,
-      template: 'newOrder',
-      context: {
-        created_at: format(order.createdAt, "MMMM do 'at' hh:mma"),
-        deliveryman: deliveryman.name,
-        product: order.product,
-        recipient_name: recipient.name,
-        recipient_address: `${recipient.address}, ${recipient.number}${
-          recipient.address_2 ? ` – ${recipient.address_2}` : null
-        }`,
-        recipient_city: recipient.city,
-        recipient_state: recipient.state,
-        recipient_zip_code: recipient.zip_code,
-      },
+    await Queue.add(NewOrderMail.key, {
+      recipient,
+      deliveryman,
+      order,
     });
 
     return res.json(order);
