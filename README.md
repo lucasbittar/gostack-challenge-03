@@ -20,15 +20,11 @@ Wrap up the back-end for a fake logistics company app called FastFeet with the f
 - Setup emails on creating and canceling orders
 
 ### To do ###
-- Update README with new functionalities
-- Integrate Sentry (not in challenge specs)
-- Integrate Redis for email queuing (not in challenge specs)
+- Integrate Sentry (not in challenge specs) [DONE]
+- Integrate Redis for email queuing (not in challenge specs) [DONE]
 
 ### Instructions ###
-```
-yarn install && yarn dev
-```
-Once yarn is running, all of the requests should point to: http://localhost:33333/.
+You can follow the detailed instructions here: [https://github.com/lucasbittar/gostack-fastfeet](https://github.com/lucasbittar/gostack-fastfeet)
 
 ### Description ###
 Final steps for the development of a fake logistics company app called FastFeet.
