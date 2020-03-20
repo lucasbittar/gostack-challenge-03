@@ -24,7 +24,7 @@ Wrap up the back-end for a fake logistics company app called FastFeet with the f
 - Integrate Redis for email queuing (not in challenge specs) [DONE]
 
 ### Instructions ###
-You can follow the detailed instructions here: [https://github.com/lucasbittar/gostack-fastfeet](https://github.com/lucasbittar/gostack-fastfeet)
+You can follow the detailed instructions [here](https://github.com/lucasbittar/gostack-fastfeet#setup-back-end).
 
 ### Description ###
 Final steps for the development of a fake logistics company app called FastFeet.
