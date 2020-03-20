@@ -4,6 +4,9 @@ import { Op } from 'sequelize';
 import Deliveryman from '../models/Deliveryman';
 import File from '../models/File';
 
+import NewDeliverymanMail from '../jobs/NewDeliverymanMail';
+import Queue from '../../lib/Queue';
+
 class DeliverymanController {
   async index(req, res) {
     const { page = 1, q } = req.query;
@@ -85,6 +88,12 @@ class DeliverymanController {
       return res.status(400).json({ error: 'User already exists' });
     }
     const { id, name, email, avatar_id } = await Deliveryman.create(req.body);
+
+    const deliveryman = { id, name, email };
+
+    await Queue.add(NewDeliverymanMail.key, {
+      deliveryman,
+    });
 
     return res.json({ id, name, email, avatar_id });
   }
