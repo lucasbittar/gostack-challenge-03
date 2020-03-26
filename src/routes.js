@@ -20,7 +20,9 @@ const upload = multer(multerConfig);
 routes.post('/users', UserController.store);
 routes.post('/sessions', SessionController.store);
 
-routes.get('/', (req, res) => res.json({ message: 'Hey!' }));
+routes.get('/', (req, res) =>
+  res.json({ message: 'Testing Buddy pipelines!' })
+);
 
 routes.use(authMiddleware);
 
