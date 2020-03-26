@@ -21,7 +21,7 @@ routes.post('/users', UserController.store);
 routes.post('/sessions', SessionController.store);
 
 routes.get('/', (req, res) =>
-  res.json({ message: 'Testing Buddy custom email notifications again!' })
+  res.json({ message: 'Testing Buddy custom email notifications!' })
 );
 
 routes.use(authMiddleware);
